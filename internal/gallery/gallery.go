@@ -13,8 +13,6 @@ type Service struct {
 	clock int64
 }
 
-var sharedCodeArray = make([]string, 0, 8)
-
 func New(s *store.Store) *Service { return &Service{Store: s, clock: 100} }
 func (s *Service) Register(owner, title, code string) (model.Record, error) {
 	r := model.Record{ID: model.NewID(fmt.Sprintf("%d:%s:%s", s.clock, owner, title)), Owner: strings.TrimSpace(owner), Title: strings.TrimSpace(title), AccessCodes: []string{strings.TrimSpace(code)}, Status: model.Pending, CreatedAt: s.clock, UpdatedAt: s.clock}
@@ -46,8 +44,7 @@ func (s *Service) ChangeCode(id, code string) (model.Record, error) {
 	if strings.TrimSpace(code) == "" {
 		return r, errors.New("code required")
 	}
-	sharedCodeArray = append(sharedCodeArray, strings.TrimSpace(code))
-	r.AccessCodes = sharedCodeArray
+	r.AccessCodes = append(r.AccessCodes, strings.TrimSpace(code))
 	r.UpdatedAt = s.clock
 	s.clock++
 	return r, s.Store.PutRecord(r)
