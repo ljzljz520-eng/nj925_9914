@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "metrics": {
+    "production_loc": 2339,
+    "production_files": 23,
+    "production_packages": 8,
+    "test_files": 9,
+    "production_functions": 79,
+    "decision_points": 108
+  },
+  "persistence": {
+    "module": "go.etcd.io/bbolt",
+    "entities": ["Record", "AuditEvent", "Workflow", "Attachment"],
+    "reopen_test": "TestPersistenceSurvivesReopen"
+  },
+  "workflows": [
+    {"steps": ["create album registration", "review pending registration", "confirm approved registration", "archive completed registration"], "test": "TestWorkflowCreateReviewArchive"},
+    {"steps": ["search by owner or title", "select one registration", "update current access code", "publish visible code summary"], "test": "TestWorkflowSearchUpdatePublish"},
+    {"steps": ["import deterministic rows", "validate required fields", "persist valid records", "report accepted and rejected rows"], "test": "TestWorkflowImportReport"}
+  ]
+}
